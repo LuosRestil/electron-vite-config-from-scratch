@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:electron": "vite build -c vite.config.electron.ts",
+    "run:electron": "electron dist/main.js"
   },
   "dependencies": {
     "react": "^18.3.1",

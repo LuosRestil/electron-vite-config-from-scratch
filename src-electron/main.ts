@@ -9,7 +9,7 @@ function createWindow() {
     useContentSize: true,
   });
 
-  mainWindow.loadURL("http://localhost:3000");
+  mainWindow.loadURL("http://localhost:5173");
   // mainWindow.webContents.openDevTools(); // dev tools open on start
 
   mainWindow.on("closed", () => {
@@ -17,11 +17,11 @@ function createWindow() {
   });
 }
 
-await app.whenReady();
-createWindow();
+app.whenReady().then(createWindow);
 
 app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") app.quit();
+  app.quit();
+  // if (process.platform !== "darwin") app.quit(); // mac convention is to not quit on close
 });
 
 app.on("activate", () => {
