@@ -57,7 +57,13 @@ async function bundle(server: ViteDevServer) {
 }
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(env => ({
+  // Electron uses relative path to load files, 
+  // but Vite uses the base option, which is / by default, 
+  // therefore our application will not work when we actually build the Vite project
+  // unless we override this
+  // the mode can be set by the CLI
+  base: env.mode === 'production' ? './' : '/',
   plugins: [
     react(),
     // this is a vite plugin, configureServer is vite-specific
@@ -70,4 +76,4 @@ export default defineConfig({
       },
     },
   ],
-});
+}));
