@@ -1,16 +1,30 @@
 import { resolve } from "path";
+import { type AddressInfo } from 'net'
 import { spawn, type ChildProcess } from "child_process";
 import { build, defineConfig, type ViteDevServer } from "vite";
 import react from "@vitejs/plugin-react";
 
 async function bundle(server: ViteDevServer) {
+  // resolve the server address
+  const address = server.httpServer?.address() as AddressInfo;
+  const host = address.address === '127.0.0.1' ? 'localhost' : address.address;
+  // build the url
+  const appUrl = `http://${host}:${address.port}`;
+
   // 'watcher' is a RollupWatcher, but Vite is doesn't export this type...
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const watcher: any = await build({
     configFile: "vite.config.electron.ts",
+    // mode is `development` when running vite 
+    // mode is `production` when running vite build
+    mode: server.config.mode,
     build: {
       watch: {}, // to make a watcher
     },
+    define: {
+      // here we define a vite replacement
+      'import.meta.env.ELECTRON_APP_URL': JSON.stringify(appUrl)
+    }
   });
 
   // Dynamically import Electron and retrieve the default export (path to binary)

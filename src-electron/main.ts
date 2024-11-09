@@ -9,6 +9,20 @@ function createWindow() {
     useContentSize: true,
   });
 
+  // when in dev mode, load the url and open the dev tools
+  if (process.env.NODE_ENV === "development") {
+    mainWindow.loadURL(import.meta.env.ELECTRON_APP_URL);
+    // mainWindow.webContents.openDevTools(); // dev tools open on start
+  } else {
+    // in production, close the dev tools
+    mainWindow.webContents.on("devtools-opened", () => {
+      mainWindow!.webContents.closeDevTools();
+    });
+
+    // load the build file instead
+    mainWindow.loadFile(import.meta.env.ELECTRON_APP_URL);
+  }
+
   mainWindow.loadURL("http://localhost:5173");
   // mainWindow.webContents.openDevTools(); // dev tools open on start
 
